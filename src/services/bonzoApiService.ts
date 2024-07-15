@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { AccountInfo } from '../types/accountTypes';
 import bonzoApiConfig from '../config/bonzoApiConfig';
 import { AccountInfo } from '../types/accountTypes';
 
