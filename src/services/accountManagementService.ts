@@ -1,4 +1,4 @@
-import bonzoApiService from './bonzoApiService';
+import { bonzoApiService } from './bonzoApiService';
 import { metricsCalculationService } from './metricsCalculationService';
 import { AccountInfo } from '../types/accountTypes';
 
