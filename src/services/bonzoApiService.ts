@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import bonzoApiConfig, { BonzoApiConfig } from '../config/bonzoApiConfig';
+import bonzoApiConfig from '../config/bonzoApiConfig';
 
 interface Prospect {
   id: string;

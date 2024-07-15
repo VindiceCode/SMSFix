@@ -2,7 +2,7 @@ import { AccountWithMetrics } from '../types/account';
 import { Contact } from '../types/contact';
 
 export class OptimizationEngine {
-  private readonly UNDERPERFORMING_THRESHOLD = 50; // 50% response rate or deliverability
+  private UNDERPERFORMING_THRESHOLD: number = 50; // 50% response rate or deliverability
 
   identifyUnderperformingAccounts(accounts: AccountWithMetrics[]): AccountWithMetrics[] {
     return accounts.filter(account => 
