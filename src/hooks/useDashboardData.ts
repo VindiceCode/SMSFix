@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import bonzoApiService from '../services/bonzoApiService';
+import { bonzoApiService } from '../services/bonzoApiService';
 
 interface DashboardData {
   overallResponseRate: number;
