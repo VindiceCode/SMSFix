@@ -41,6 +41,32 @@ class BonzoApiService {
     }
   }
 
+  async createAccount(accountData: Partial<AccountInfo>): Promise<AccountInfo> {
+    try {
+      const response = await this.api.post('/accounts', accountData);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async updateAccount(accountId: string, accountData: Partial<AccountInfo>): Promise<AccountInfo> {
+    try {
+      const response = await this.api.put(`/accounts/${accountId}`, accountData);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async deleteAccount(accountId: string): Promise<void> {
+    try {
+      await this.api.delete(`/accounts/${accountId}`);
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   // Add more API wrapper functions as needed
 }
 
