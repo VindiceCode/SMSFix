@@ -31,7 +31,7 @@
    - Files: src/components/AccountList.tsx, src/services/accountManagementService.ts
    - Success: View list of SMS sender accounts with basic performance indicators
 
-5. [ ] Basic Contact List Management
+5. [x] Basic Contact List Management
    - Files: src/components/ContactList.tsx, src/services/contactTransferService.ts
    - Success: View contacts associated with accounts and perform simple transfers
 
