@@ -1,6 +1,6 @@
-import { MetricsCalculationService } from '../services/metricsCalculationService';
-import { accountManagementService } from '../services/accountManagementService';
-import { bonzoApiService } from '../services/bonzoApiService';
+import { metricsCalculationService } from './metricsCalculationService';
+import { accountManagementService } from './accountManagementService';
+import { bonzoApiService } from './bonzoApiService';
 
 // Interfaces for webhook payload structures
 interface NewMessageWebhook {

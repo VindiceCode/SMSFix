@@ -1,6 +1,6 @@
 import { bonzoApiService } from './bonzoApiService';
 import { accountManagementService } from './accountManagementService';
-import { MetricsCalculationService } from './metricsCalculationService';
+import { metricsCalculationService } from './metricsCalculationService';
 
 class DataPollingService {
   private pollingInterval: NodeJS.Timeout | null = null;

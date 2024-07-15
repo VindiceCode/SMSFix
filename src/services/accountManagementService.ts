@@ -1,6 +1,13 @@
-import bonzoApiService from './bonzoApiService';
+import { bonzoApiService } from './bonzoApiService';
 import { metricsCalculationService } from './metricsCalculationService';
-import { AccountInfo } from '../types/accountTypes';
+
+export interface AccountInfo {
+  id: string;
+  name: string;
+  totalMessages: number;
+  totalResponses: number;
+  deliveredMessages: number;
+}
 
 export interface AccountWithMetrics extends AccountInfo {
   responseRate: number;

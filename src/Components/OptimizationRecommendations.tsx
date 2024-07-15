@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { optimizationEngine } from '../services/optimizationEngine';
-import { AccountWithMetrics } from '../types/account';
+import { AccountWithMetrics } from '../services/accountManagementService';
 import { accountManagementService } from '../services/accountManagementService';
 
 const OptimizationRecommendations: React.FC = () => {

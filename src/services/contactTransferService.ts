@@ -1,4 +1,4 @@
-import bonzoApiService from './bonzoApiService';
+import { bonzoApiService } from './bonzoApiService';
 
 export interface Contact {
   id: string;

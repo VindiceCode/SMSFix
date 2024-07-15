@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import ContactList from './components/ContactList';
-import AccountList from './components/AccountList';
-import MetricsDisplay from './components/MetricsDisplay';
-import OptimizationRecommendations from './components/OptimizationRecommendations';
+import Dashboard from './Components/Dashboard';
+import ContactList from './Components/ContactList';
+import AccountList from './Components/AccountList';
+import MetricsDisplay from './Components/MetricsDisplay';
+import OptimizationRecommendations from './Components/OptimizationRecommendations';
 
 const App: React.FC = () => {
   return (

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { AccountInfo } from '../types/accountTypes';
+import { AccountInfo } from '../services/accountManagementService';
 import { metricsCalculationService, AccountMetrics, OverallMetrics } from '../services/metricsCalculationService';
-import bonzoApiService from '../services/bonzoApiService';
+import { bonzoApiService } from '../services/bonzoApiService';
 
 const MetricsDisplay: React.FC = () => {
   const { data: accountsData, isLoading, error } = useQuery<AccountInfo[], Error>(
