@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { optimizationEngine } from '../services/optimizationEngine';
 import { AccountWithMetrics } from '../types/account';
 import { accountManagementService } from '../services/accountManagementService';
@@ -6,23 +6,38 @@ import { accountManagementService } from '../services/accountManagementService';
 const OptimizationRecommendations: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Map<string, string[]>>(new Map());
   const [accounts, setAccounts] = useState<AccountWithMetrics[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAccountsAndGenerateRecommendations = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const fetchedAccounts = await accountManagementService.getAccounts();
+      setAccounts(fetchedAccounts);
+
+      const underperformingAccounts = optimizationEngine.identifyUnderperformingAccounts(fetchedAccounts);
+      const suggestions = optimizationEngine.suggestContactTransfers(underperformingAccounts, fetchedAccounts);
+      setRecommendations(suggestions);
+    } catch (error) {
+      console.error('Failed to fetch accounts or generate recommendations:', error);
+      setError('Failed to fetch accounts or generate recommendations. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchAccountsAndGenerateRecommendations = async () => {
-      try {
-        const fetchedAccounts = await accountManagementService.getAccounts();
-        setAccounts(fetchedAccounts);
-
-        const underperformingAccounts = optimizationEngine.identifyUnderperformingAccounts(fetchedAccounts);
-        const suggestions = optimizationEngine.suggestContactTransfers(underperformingAccounts, fetchedAccounts);
-        setRecommendations(suggestions);
-      } catch (error) {
-        console.error('Failed to fetch accounts or generate recommendations:', error);
-      }
-    };
-
     fetchAccountsAndGenerateRecommendations();
-  }, []);
+  }, [fetchAccountsAndGenerateRecommendations]);
+
+  if (isLoading) {
+    return <div>Loading recommendations...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
@@ -38,6 +53,7 @@ const OptimizationRecommendations: React.FC = () => {
           ))}
         </ul>
       )}
+      <button onClick={fetchAccountsAndGenerateRecommendations}>Refresh Recommendations</button>
     </div>
   );
 };

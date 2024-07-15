@@ -1,0 +1,29 @@
+{
+  "project_name": "SMS Optimization System",
+  "github_repo": "smsfix",
+  "master_checklist": "master-checklist.md",
+  "working_checklist": "working-project-checklist.md",
+  "api_instructions": "api-integration-instructions.md",
+  "code_style": "code-style-instructions.md",
+  "testing_guidelines": "testing-guidelines.md",
+  "key_components": [
+    "Project Setup and Basic Bonzo API Integration",
+    "Simple Dashboard Component",
+    "Basic Performance Metrics Module",
+    "Essential Account Management Features",
+    "Basic Contact List Management",
+    "Simple Optimization Suggestions",
+    "Critical Webhook Handlers",
+    "Basic Data Polling Mechanism",
+    "Core Integration and Testing"
+  ],
+  "aider_commands": [
+    "/add",
+    "/clear",
+    "/commit",
+    "/diff",
+    "/drop",
+    "/ls",
+    "/run"
+  ]
+}
