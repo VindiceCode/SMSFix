@@ -34,6 +34,7 @@ The SMS Optimization System is a React-based web application designed to help bu
    REACT_APP_BONZO_API_BASE_URL=https://api.bonzo.com
    REACT_APP_BONZO_API_KEY=your-api-key-here
    REACT_APP_BONZO_API_TIMEOUT=5000
+   REACT_APP_BONZO_API_VERSION=v1
    ```
 
 4. Start the development server:

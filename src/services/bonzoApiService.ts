@@ -6,11 +6,12 @@ class BonzoApiService {
 
   constructor(config: BonzoApiConfig = bonzoApiConfig) {
     this.api = axios.create({
-      baseURL: config.baseUrl,
+      baseURL: `${config.baseUrl}/${config.apiVersion}`,
       timeout: config.timeout,
       headers: {
         'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json',
+        'X-Bonzo-Client': 'SMS-Optimization-System/1.0',
       },
     });
 
@@ -22,14 +23,19 @@ class BonzoApiService {
 
   private handleError(error: AxiosError): never {
     if (error.response) {
-      console.error('API request failed:', error.response.status, error.response.data);
-      throw new Error(`API request failed: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
+      const { status, data } = error.response;
+      console.error('Bonzo API request failed:', status, data);
+      if (data && typeof data === 'object' && 'error' in data) {
+        throw new Error(`Bonzo API error: ${status} - ${data.error}`);
+      } else {
+        throw new Error(`Bonzo API request failed: ${status}`);
+      }
     } else if (error.request) {
-      console.error('No response received:', error.request);
-      throw new Error('No response received from the server');
+      console.error('No response received from Bonzo API:', error.request);
+      throw new Error('No response received from Bonzo API');
     } else {
-      console.error('Error setting up the request:', error.message);
-      throw new Error(`Error setting up the request: ${error.message}`);
+      console.error('Error setting up the Bonzo API request:', error.message);
+      throw new Error(`Error setting up the Bonzo API request: ${error.message}`);
     }
   }
 
