@@ -1,16 +1,33 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import bonzoApiConfig, { BonzoApiConfig } from '../config/bonzoApiConfig';
 
+interface Prospect {
+  id: string;
+  // Add other prospect properties as needed
+}
+
+interface Campaign {
+  id: string;
+  // Add other campaign properties as needed
+}
+
+interface CommunicationHistory {
+  // Add communication history properties
+}
+
 class BonzoApiService {
   private api: AxiosInstance;
+  private retryDelay: number = 1000; // 1 second initial delay
+  private maxRetries: number = 3;
 
   constructor(config: BonzoApiConfig = bonzoApiConfig) {
     this.api = axios.create({
-      baseURL: `${config.baseUrl}/${config.apiVersion}`,
+      baseURL: config.baseUrl,
       timeout: config.timeout,
       headers: {
         'Authorization': `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
         'X-Bonzo-Client': 'SMS-Optimization-System/1.0',
       },
     });
@@ -21,10 +38,14 @@ class BonzoApiService {
     );
   }
 
-  private handleError(error: AxiosError): never {
+  private async handleError(error: AxiosError): Promise<never> {
     if (error.response) {
       const { status, data } = error.response;
       console.error('Bonzo API request failed:', status, data);
+      if (status === 429) {
+        // Rate limit error, implement retry logic
+        return this.retryRequest(error);
+      }
       if (data && typeof data === 'object' && 'error' in data) {
         throw new Error(`Bonzo API error: ${status} - ${data.error}`);
       } else {
@@ -39,6 +60,42 @@ class BonzoApiService {
     }
   }
 
+  private async retryRequest(error: AxiosError): Promise<any> {
+    if (error.config && error.config.retryCount === undefined) {
+      error.config.retryCount = 0;
+    }
+
+    if (error.config && error.config.retryCount < this.maxRetries) {
+      error.config.retryCount++;
+      const delay = this.retryDelay * Math.pow(2, error.config.retryCount - 1);
+      console.log(`Retrying request (attempt ${error.config.retryCount}) after ${delay}ms`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return this.api.request(error.config);
+    }
+
+    throw error;
+  }
+
+  async getProspects(): Promise<Prospect[]> {
+    const response = await this.api.get('/prospects');
+    return response.data;
+  }
+
+  async getProspectCommunication(prospectId: string): Promise<CommunicationHistory> {
+    const response = await this.api.get(`/prospects/${prospectId}/communication`);
+    return response.data;
+  }
+
+  async changeCampaign(prospectId: string, campaignId: string): Promise<void> {
+    await this.api.post(`/prospects/${prospectId}/campaign/${campaignId}`);
+  }
+
+  async getCampaigns(): Promise<Campaign[]> {
+    const response = await this.api.get('/campaigns');
+    return response.data;
+  }
+
+  // Existing methods
   async sendMessage(phoneNumber: string, message: string): Promise<any> {
     const response = await this.api.post('/messages', { phoneNumber, message });
     return response.data;
@@ -50,32 +107,18 @@ class BonzoApiService {
   }
 
   async createAccount(accountData: Partial<AccountInfo>): Promise<AccountInfo> {
-    try {
-      const response = await this.api.post('/accounts', accountData);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
+    const response = await this.api.post('/accounts', accountData);
+    return response.data;
   }
 
   async updateAccount(accountId: string, accountData: Partial<AccountInfo>): Promise<AccountInfo> {
-    try {
-      const response = await this.api.put(`/accounts/${accountId}`, accountData);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
+    const response = await this.api.put(`/accounts/${accountId}`, accountData);
+    return response.data;
   }
 
   async deleteAccount(accountId: string): Promise<void> {
-    try {
-      await this.api.delete(`/accounts/${accountId}`);
-    } catch (error) {
-      this.handleError(error);
-    }
+    await this.api.delete(`/accounts/${accountId}`);
   }
-
-  // Add more API wrapper functions as needed
 }
 
-export default new BonzoApiService();
+export const bonzoApiService = new BonzoApiService();

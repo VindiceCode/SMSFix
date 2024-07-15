@@ -88,3 +88,48 @@ class WebhookHandlers {
 }
 
 export const webhookHandlers = new WebhookHandlers();
+import { createHmac } from 'crypto';
+import bonzoApiConfig from '../config/bonzoApiConfig';
+import { bonzoApiService } from '../services/bonzoApiService';
+
+interface WebhookPayload {
+  event: string;
+  data: any;
+}
+
+export const verifyWebhookSignature = (signature: string, body: string): boolean => {
+  const hmac = createHmac('sha256', bonzoApiConfig.webhookSecret);
+  const expectedSignature = hmac.update(body).digest('hex');
+  return signature === expectedSignature;
+};
+
+export const handleNewMessageWebhook = async (payload: WebhookPayload): Promise<void> => {
+  // Implement logic to handle new message webhook
+  console.log('New message received:', payload);
+  // Update relevant metrics or trigger necessary actions
+};
+
+export const handleProspectUpdateWebhook = async (payload: WebhookPayload): Promise<void> => {
+  // Implement logic to handle prospect update webhook
+  console.log('Prospect updated:', payload);
+  // Update relevant metrics or trigger necessary actions
+};
+
+export const processWebhook = async (signature: string, body: string): Promise<void> => {
+  if (!verifyWebhookSignature(signature, body)) {
+    throw new Error('Invalid webhook signature');
+  }
+
+  const payload: WebhookPayload = JSON.parse(body);
+
+  switch (payload.event) {
+    case 'new_message':
+      await handleNewMessageWebhook(payload);
+      break;
+    case 'prospect_update':
+      await handleProspectUpdateWebhook(payload);
+      break;
+    default:
+      console.warn('Unhandled webhook event:', payload.event);
+  }
+};
