@@ -16,7 +16,16 @@ interface CommunicationHistory {
 }
 
 class BonzoApiService {
-  private api: AxiosInstance;
+  private api: AxiosInstance = axios.create({
+    baseURL: bonzoApiConfig.baseUrl,
+    timeout: bonzoApiConfig.timeout,
+    headers: {
+      'Authorization': `Bearer ${bonzoApiConfig.apiKey}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
+      'X-Bonzo-Client': 'SMS-Optimization-System/1.0',
+    },
+  });
   private retryDelay: number = 1000; // 1 second initial delay
   private maxRetries: number = 3;
 
