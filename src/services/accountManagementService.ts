@@ -1,5 +1,7 @@
 import { bonzoApiService } from './bonzoApiService';
-import { metricsCalculationService } from './metricsCalculationService';
+import { MetricsCalculationService } from './metricsCalculationService';
+
+const metricsCalculationService = new MetricsCalculationService();
 import { AccountInfo } from '../types/accountTypes';
 
 export interface AccountWithMetrics extends AccountInfo {
